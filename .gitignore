@@ -26,3 +26,5 @@ replay_pid*
 /.sdkmanrc
 /.gradle/
 /.idea/
+
+src/main/resources/day*.txt
