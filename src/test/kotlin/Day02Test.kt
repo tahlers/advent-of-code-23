@@ -21,7 +21,7 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
     test("calculate calibrationSum solution one") {
         val input = this.javaClass.getResource("/day02.txt")!!.readText()
         val result = Day02.sumOfPossibleGameIds(input)
-        result shouldBe 2286
+        result shouldBe 2632
     }
 
     test("calculate sum of power of minimal games") {
@@ -32,7 +32,7 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
     test("calculate sum of power of minimal games solution") {
         val input = this.javaClass.getResource("/day02.txt")!!.readText()
         val result = Day02.sumOfPowerOfMinimalGames(input)
-        result shouldBe 0
+        result shouldBe 69629
     }
 
 })

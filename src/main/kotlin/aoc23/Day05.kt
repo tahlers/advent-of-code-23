@@ -1,10 +1,35 @@
 package aoc23
 
+import kotlin.math.max
 import kotlin.math.min
+
+fun LongRange.overlap(range: LongRange): List<LongRange?> {
+    val before = if (range.first < first) {
+        range.first..(min(range.last, first - 1))
+    } else null
+    val after = if (range.last > last) {
+        max(range.first, last + 1)..range.last
+    } else null
+    val between = if (range.last >= first && range.first < (last + 1)) {
+        max(range.first, first)..min(range.last, last)
+    } else null
+    return listOf(before, between, after)
+}
 
 object Day05 {
 
-    data class MappingRange(val destinationStart: Long, val sourceStart: Long, val length: Long)
+    data class MappingRange(val destinationStart: Long, val sourceStart: Long, val length: Long) {
+        private val currentRange = (sourceStart)..<(sourceStart + length)
+        fun mapRange(range: LongRange): List<LongRange?> {
+            val overlaps = currentRange.overlap(range)
+            val newBetween = if (overlaps[1] != null) {
+                val offset = destinationStart - sourceStart
+                overlaps[1]!!.first + offset..(overlaps[1]!!.last + offset)
+            } else null
+            return listOf(overlaps[0], newBetween, overlaps[2])
+        }
+    }
+
     data class GardenMap(val name: String, val mappingRanges: List<MappingRange> = emptyList()) {
 
         fun addMappingRange(mappingRange: MappingRange): GardenMap =
@@ -18,6 +43,17 @@ object Day05 {
                 val offset = mappingToUse.destinationStart - mappingToUse.sourceStart
                 input + offset
             } else input
+        }
+
+        fun mapRange(range: LongRange): List<LongRange> {
+            val initialUnfinishedAndFinished = listOf(range) to emptyList<LongRange>()
+            val folded = mappingRanges.fold(initialUnfinishedAndFinished) { acc, mappingRange ->
+                val mapped = acc.first.map { mappingRange.mapRange(it) }
+                val newFinished = mapped.mapNotNull { it[1] }
+                val newUnfinished = mapped.flatMap { listOfNotNull(it[0], it[2]) }
+                newUnfinished to (acc.second + newFinished)
+            }
+            return folded.first + folded.second
         }
     }
 
@@ -35,12 +71,14 @@ object Day05 {
         val almanac = parseInputToAlmanac(input)
         val seedRanges = almanac.seeds.windowed(2, step = 2) {
             (it.first())..<(it.first() + it.last())
-        }.asSequence().flatten()
-        val loc2 = seedRanges.fold(Long.MAX_VALUE) { acc, current ->
-            val newLocation = almanac.gardenMaps.fold(current) { acc2, map -> map.mapInput(acc2) }
-            min(acc, newLocation)
         }
-        return loc2
+        val mappedRanges = seedRanges.flatMap { seedRange ->
+            val result = almanac.gardenMaps.fold(listOf(seedRange)) { acc, gardenMap ->
+                acc.flatMap { gardenMap.mapRange(it) }
+            }
+            result
+        }
+        return mappedRanges.minOf { it.first }
     }
 
     private fun parseInputToAlmanac(input: String): Almanac {

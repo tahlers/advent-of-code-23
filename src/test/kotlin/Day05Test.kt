@@ -1,4 +1,5 @@
 import aoc23.Day05
+import aoc23.overlap
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
@@ -61,5 +62,17 @@ humidity-to-location map:
         val input = this.javaClass.getResource("/day05.txt")!!.readText()
         val result = Day05.calculateLowestSeedRangeLocationNumber(input)
         result shouldBe 69841803L
+    }
+
+    test("overlap extension function") {
+        val testRange = 3L..5L
+        testRange.overlap(testRange) shouldBe listOf(null, testRange, null)
+        testRange.overlap(1L..2L) shouldBe listOf(1L..2L, null, null)
+        testRange.overlap(6L..8L) shouldBe listOf(null, null, 6L..8L)
+        testRange.overlap(1L..8L) shouldBe listOf(1L..2L, testRange, 6L..8L)
+        testRange.overlap(1L..5L) shouldBe listOf(1L..2L, testRange, null)
+        testRange.overlap(3L..8L) shouldBe listOf(null, testRange, 6L..8L)
+        testRange.overlap(1L..4L) shouldBe listOf(1L..2L, 3L..4L, null)
+        testRange.overlap(4L..8L) shouldBe listOf(null, 4L..5L, 6L..8L)
     }
 })
