@@ -3,7 +3,7 @@ package aoc23
 object Day07 {
 
     enum class Card {
-        JOKER_PLAY, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JOKER, QUEEN, KING, ACE,
+        JOKER, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE,
     }
 
     enum class HandType {
@@ -29,7 +29,7 @@ object Day07 {
 
         private fun calculateJokerPlayType(): HandType {
             val cardMap = cards.groupBy { it }
-            val jokerCount = cardMap[Card.JOKER_PLAY]?.size ?: 0
+            val jokerCount = cardMap[Card.JOKER]?.size ?: 0
             val normalType = calculateType()
             return when {
                 normalType == HandType.FOUR_OF_A_KIND && jokerCount >= 1 -> HandType.FIVE_OF_A_KIND
@@ -85,7 +85,7 @@ object Day07 {
             '8' -> Card.EIGHT
             '9' -> Card.NINE
             'T' -> Card.TEN
-            'J' -> if (isJokerPlay) Card.JOKER_PLAY else Card.JOKER
+            'J' -> if (isJokerPlay) Card.JOKER else Card.JACK
             'Q' -> Card.QUEEN
             'K' -> Card.KING
             'A' -> Card.ACE
