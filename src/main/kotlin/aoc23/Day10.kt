@@ -23,10 +23,8 @@ object Day10 {
 
         fun nextStep(previousPipe: Pipe?, field: Field): Pipe {
             val possibilitiesOnField = (possibleConnectionPipes() - previousPipe).filter { field.pipes[it!!.pos] == it }
-            //val x = possibilitiesOnField.first() { it!!.possibleConnectionPipes().any { it == this } }
-            val possibleToCurrent = possibilitiesOnField.filter { this in it!!.possibleConnectionPipes() }
             return if (possibilitiesOnField.size == 1 || type == START) {
-                possibleToCurrent.first()!!
+                possibilitiesOnField.first()!!
             } else {
                 throw IllegalStateException("Not on Pipe Loop!")
             }
