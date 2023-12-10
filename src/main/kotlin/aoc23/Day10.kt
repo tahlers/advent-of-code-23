@@ -85,7 +85,7 @@ object Day10 {
         }.map { it.second }.associateBy { it.pos }
         val maxX = input.lines().first().length
         val maxY = input.trim().lines().size
-        val innerOrNot = (0..<maxY).flatMap { y ->
+        val innerPositions = (0..<maxY).flatMap { y ->
             (0..<maxX).mapNotNull { x ->
                 val current = Pos(x, y)
                 if (current in pathSet) {
@@ -97,7 +97,7 @@ object Day10 {
                 }
             }
         }
-        return innerOrNot.size
+        return innerPositions.size
     }
 
 
