@@ -11,6 +11,8 @@ repositories {
 
 dependencies {
     implementation("io.arrow-kt:arrow-core:1.2.0")
+    implementation("io.vavr:vavr:0.10.4")
+    implementation("io.vavr:vavr-kotlin:0.10.2")
     testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
     testImplementation("io.kotest:kotest-assertions-core:5.8.0")
 }
