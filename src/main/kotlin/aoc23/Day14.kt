@@ -14,7 +14,7 @@ object Day14 {
             return MirrorMap(maxY, maxX, turnedRocks.toSet(), turnedCubes.toSet())
         }
 
-        fun load(): Int = rocks.map { it.y }.sum()
+        fun load(): Int = rocks.sumOf { it.y }
     }
 
     fun calculateRockWeight(input: String): Int {
@@ -69,7 +69,7 @@ object Day14 {
             .filter { it.x == rockPos.x && it.y > rockPos.y }
             .minOfOrNull { it.y - 1 } ?: (mirrorMap.maxY)
         val boundary = min(mirrorMap.maxY, cubeBoundary)
-        val otherRocks = mirrorMap.rocks.filter { it.x == rockPos.x && it.y > rockPos.y && it.y <= boundary }.count()
+        val otherRocks = mirrorMap.rocks.count { it.x == rockPos.x && it.y > rockPos.y && it.y <= boundary }
         return Pos(rockPos.x, boundary - otherRocks)
     }
 
@@ -93,12 +93,16 @@ object Day14 {
         (mirrorMap.maxY downTo 1).forEach { y ->
             (1..mirrorMap.maxX).forEach { x ->
                 val pos = Pos(x, y)
-                if (pos in mirrorMap.rocks) {
-                    print('O')
-                } else if (pos in mirrorMap.cubes) {
-                    print('#')
-                } else {
-                    print('.')
+                when (pos) {
+                    in mirrorMap.rocks -> {
+                        print('O')
+                    }
+                    in mirrorMap.cubes -> {
+                        print('#')
+                    }
+                    else -> {
+                        print('.')
+                    }
                 }
             }
             print("\n")
